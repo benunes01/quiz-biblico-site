@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Duelo no Quiz Bíblico</title>
+<meta name="description" content="Jogue as mesmas 7 perguntas que seu amigo e veja quem sabe mais da Bíblia.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Quiz Bíblico: Jornada da Fé">
+<meta property="og:title" content="Duelo no Quiz Bíblico">
+<meta property="og:description" content="Jogue as mesmas 7 perguntas que seu amigo e veja quem sabe mais da Bíblia.">
+<meta property="og:image" content="https://benunes01.github.io/quiz-biblico-site/duelo/duelo.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="O ícone do Quiz Bíblico, uma lamparina sobre a Bíblia aberta, e a pergunta: quem sabe mais da Bíblia?">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@500;700&family=Alegreya+SC:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--ground:#F7EEDC;--raised:#FBF6EA;--ink:#2A2440;--soft:#5E5670;--line:rgba(42,36,64,.14);--ribbon:#9B2D3A;--light:#8A6410;--gold:#F2C14E;--on-gold:#2A2440}
+@media (prefers-color-scheme: dark){:root{--ground:#1B1F3B;--raised:#252A4D;--ink:#F3ECDD;--soft:#BDB6CC;--line:rgba(243,236,221,.14);--ribbon:#E07A86;--light:#F2C14E}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+main{max-width:520px;margin:0 auto;padding:32px 16px 56px}
+h1{font-family:Alegreya,"Iowan Old Style",Georgia,serif;font-weight:700;font-size:32px;line-height:38px;margin:8px 0 8px;letter-spacing:-.005em}
+.kicker{font-family:"Alegreya SC",Georgia,serif;color:var(--ribbon);letter-spacing:.06em;font-size:15px;margin:0}
+.soft{color:var(--soft);font-size:15px}
+.sheet{background:var(--raised);border:1px solid var(--line);border-radius:16px;padding:20px 16px;margin:24px 0;text-align:center}
+.label{font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--soft);margin:0}
+.code{font-family:Alegreya,Georgia,serif;font-weight:700;font-size:44px;line-height:1.2;letter-spacing:.18em;margin:4px 0 8px;padding-left:.18em;word-break:break-all}
+.btn{display:block;width:100%;min-height:52px;border-radius:14px;border:1px solid var(--line);padding:14px 16px;margin:12px 0 0;font:600 17px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;text-align:center;text-decoration:none;color:var(--ink);background:transparent;cursor:pointer}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:var(--on-gold)}
+.btn.small{display:inline-block;width:auto;min-height:44px;padding:10px 18px;margin:0;font-size:15px}
+ol{padding-left:22px;margin:8px 0 0}
+li{margin:6px 0}
+.note{border-top:1px solid var(--line);margin-top:32px;padding-top:12px}
+[hidden]{display:none!important}
+footer{margin-top:40px;color:var(--soft);font-size:15px}
+footer a{color:var(--soft)}
+</style>
+</head>
+<body>
+<main>
+<p class="kicker">Quiz Bíblico · Duelo</p>
+<h1>Seu amigo te desafiou</h1>
+<p>São 7 perguntas sobre a Bíblia. Você joga as mesmas 7, e o app mostra quem sabe mais.</p>
+
+<div class="sheet" id="withCode">
+  <p class="label">Código do duelo</p>
+  <p class="code" id="code" aria-label="Código do duelo"></p>
+  <button class="btn small" id="copy" type="button">Copiar código</button>
+</div>
+<div class="sheet" id="noCode" hidden>
+  <p>Este link veio sem o código do duelo. Peça para seu amigo mandar de novo.</p>
+</div>
+
+<div id="iphone">
+  <a class="btn primary" id="store" href="https://apps.apple.com/app/id6837379283?pt=128666146&amp;ct=duelLink&amp;mt=8">Baixar grátis na App Store</a>
+  <a class="btn" id="open" href="quizbiblico://duelo">Já tenho o app: abrir o duelo</a>
+  <ol class="soft">
+    <li>Baixe o Quiz Bíblico. É grátis.</li>
+    <li>Toque de novo no link da conversa, ou volte aqui e toque em “Já tenho o app”.</li>
+    <li>Se preferir, abra o Duelo no app e digite o código.</li>
+  </ol>
+</div>
+<p class="note" id="android" hidden>Por enquanto o Quiz Bíblico é só para iPhone.</p>
+
+<footer><a href="../">Quiz Bíblico</a> · <a href="../privacy.html">Privacidade</a> · <a href="../support.html">Suporte</a></footer>
+</main>
+<script>
+(function () {
+  // The code alphabet of the app (DuelCode): no I, O, 0 or 1.
+  var raw = new URLSearchParams(location.search).get('c') || '';
+  var code = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  var valid = /^[A-HJ-NP-Z2-9]{6}$/.test(code);
+  if (valid) {
+    document.getElementById('code').textContent = code;
+    document.getElementById('open').href = 'quizbiblico://duelo?c=' + code;
+  } else {
+    document.getElementById('withCode').hidden = true;
+    document.getElementById('noCode').hidden = false;
+  }
+  if (/Android/i.test(navigator.userAgent)) {
+    document.getElementById('iphone').hidden = true;
+    document.getElementById('android').hidden = false;
+  }
+  var copy = document.getElementById('copy');
+  copy.addEventListener('click', function () {
+    var done = function () { copy.textContent = 'Código copiado'; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(done, function () {});
+    } else {
+      var area = document.createElement('textarea');
+      area.value = code;
+      document.body.appendChild(area);
+      area.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      document.body.removeChild(area);
+    }
+  });
+})();
+</script>
+</body>
+</html>
